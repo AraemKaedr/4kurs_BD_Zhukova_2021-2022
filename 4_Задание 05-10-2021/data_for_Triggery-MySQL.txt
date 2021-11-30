@@ -1,0 +1,167 @@
+use morozov;
+/*
+create table student_morozov
+(
+    N_stud int primary key auto_increment,
+    FIO varchar(40) not null,
+    D_R date not null,
+    Gruppa varchar(8) not null,
+    Stipendiya float,
+    Kod_spec int not null
+)
+character set = 'utf8';
+*/
+/*
+insert into student_morozov (N_stud, FIO, D_R, Gruppa, Stipendiya, Kod_spec) values
+(1, "Сидоров", "1992-07-23", "4п1", 880.00, 3322),
+(2, "Петров", "1993-11-07", "4п3", null, 4466),
+(3, "Григорьев", "1992-04-19", "4п2", 920.00, 8811),
+(4, "Данилова", "1992-06-11", "4п2", 1200, 8811),
+(5, "Андреев", "1993-11-06", "4п1", null, 3322),
+(6, "Серова", "1991-02-25", "4п1", null, 3322),
+(7, "Коробкова", "1992-11-20", "4п2", 880, 8811),
+(8, "Смирнов", "1991-07-16", "4п2", 920, 8811),
+(9, "Подгорнова", "1991-09-25", "4п3", 1200, 4466),
+(10, "Лебедев", "1991-07-26", "4п3", 920, 4466);
+*/
+-- 7  Изменяем структуру таблицы Student, добавляя в неё поле Stip_New (новая стипендия)
+-- alter table student_morozov add column Stip_New float after Kod_spec;
+
+-- Выводим таблицу
+-- select * from student_morozov;
+
+-- Триггер 1
+/*
+create trigger TR1 before insert on student_morozov
+for each row
+set new.Stip_New = new.Stipendiya * 2;
+*/
+-- Проверка триггера 1
+/*
+insert into student_morozov (N_stud, FIO, D_R, Gruppa, Stipendiya, Kod_spec)
+values
+(11, "Карнашев", "1992-03-02", "4п1", 1100, 3322),
+(12, "Обозова", "1991-08-19", "4п3", 880, 4466);
+*/
+
+-- Ещё раз выводим таблицу
+-- select * from student_morozov;
+
+-- Добавляем новое поле(столбец) в нашу таблицу
+-- alter table student_morozov add column Premiya float after Stip_New;
+
+-- 12  Назначаем каждому студенту премию в размере 500 рублей
+-- update student_morozov set Premiya = 500 where N_stud >=1 and N_stud <= 12;
+
+-- Триггер 2
+/*
+create trigger TR2 before update on student_morozov
+for each row
+set new.Premiya = new.Stipendiya + 1000;
+*/
+-- Проверка триггера 2
+-- update student_morozov set Stipendiya = 1200 where FIO = 'Андреев';
+-- update student_morozov set Stipendiya = 900 where FIO = 'Серова';
+
+-- 17	Создаём новую таблицу базы данных Arhiv_1, которая содержит следующие поля: номер записи (целочисленное, ключевое, автоинкрементное), номер студента, фамилия студента, сумма стипендии и премии
+/*
+create table Arhiv_1
+(
+    id_zapis int primary key auto_increment,
+    N_stud int not null,
+    FIO varchar(40) not null,
+    Sum_stip_plus_prem float
+)
+character set = 'utf8';
+*/
+
+-- Триггер 3
+/*
+create trigger TR3 before delete on student_morozov
+for each row
+INSERT INTO ARHiV_1 VALUES (null, OLD.N_stud, OLD.FIO, (old.Stipendiya+old.Premiya));
+*/
+
+-- Проверка триггера 3
+-- delete from student_morozov where 'N_stud' = '5';
+-- или
+-- delete from student_morozov where FIO = "Андреев"
+-- delete from student_morozov where FIO = "Серова";
+
+-- Удаление триггера 1
+-- drop trigger TR1;
+
+-- 24	Создайте новую таблицу базы данных ARHiV_2, которая содержит следующие поля: номер записи (целочисленное, ключевое, автоинкрементное), фамилия студента, группа и размер стипендии
+/*
+create table Arhiv_2
+(
+    id_zap int primary key auto_increment,
+    FIO_stud varchar(40) not null,
+    Gruppa_stud varchar(8) not null,
+    Stip_stud float
+)
+character set = 'utf8';
+*/
+
+-- Триггер 4
+/*
+create trigger TR4 before insert on student_morozov
+for each row
+insert into Arhiv_2 values (null, new.FIO, new.Gruppa, (new.Stipendiya * 2));
+*/
+
+-- Проверка триггера 4
+/*
+insert into student_morozov (N_stud, FIO, D_R, Gruppa, Stipendiya, Kod_spec)
+values
+(null, "Кочуров", "2002-05-16", "п431", 1000, 9933),
+(null, "Воронин", "2002-07-12", "п431", 1000, 9933);
+*/
+
+-- 29	Измените структуру таблицы Student, добавив в неё поле YYY (год рождения)
+-- 30	Измените структуру таблицы Student, добавив в неё поле MMM (месяц рождения)
+-- 31	Измените структуру таблицы Student, добавив в неё поле DDD (день рождения)
+/*
+alter table student_morozov add column YYY year after Premiya;
+alter table student_morozov add column MMM int after YYY;
+alter table student_morozov add column DDD int after MMM;
+*/
+
+-- Триггер 5
+/*
+create trigger TR5 before insert on student_morozov
+for each row
+insert into student_morozov values (new.YYY = year(new.D_R), new.MMM = month(new.D_R), new.DDD = day(new.D_R));
+*/
+
+-- Проверка триггера 5
+/*
+insert into student_morozov (N_stud, FIO, D_R, Gruppa, Stipendiya, Kod_spec)
+values
+(null, "Свидерский", "2002-07-07", "п431", 2000, 9933);
+*/
+
+-- Триггер 6
+/*
+create trigger TR6 before update on student_morozov
+for each row
+set new.Gruppa = "2ЗАО1";
+*/
+-- Проверка триггера 6
+-- update student_morozov set Premiya = 600 where FIO = 'Кочуров';
+-- update student_morozov set Premiya = 600 where FIO = 'Воронин';
+
+-- Триггер 7
+/*
+create trigger TR7 before update on student_morozov
+for each row
+set new.Stipendiya =
+case
+when new.Gruppa = "4п1" 
+then new.Stipendiya+1000
+else new.Stipendiya
+end;
+*/
+
+-- Проверка триггера 7
+-- update student_morozov set Stip_New = Stip_New + 200 where FIO = "Сидоров";

@@ -1,0 +1,44 @@
+latev@JuniorR311C12 MINGW64 ~
+$ git init
+Initialized empty Git repository in C:/Users/latev/.git/
+
+latev@JuniorR311C12 MINGW64 ~ (master)
+$ cd test_Repository
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$ git init
+Initialized empty Git repository in C:/Users/latev/test_Repository/.git/
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        alpha.txt
+        num.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$ git add alpha.txt
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$ git add num.txt
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   alpha.txt
+        new file:   num.txt
+
+
+latev@JuniorR311C12 MINGW64 ~/test_Repository (master)
+$

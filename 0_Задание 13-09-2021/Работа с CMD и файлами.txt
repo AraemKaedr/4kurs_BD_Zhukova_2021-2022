@@ -1,0 +1,33 @@
+Microsoft Windows [Version 10.0.19042.1165]
+(c) Корпорация Майкрософт (Microsoft Corporation). Все права защищены.
+
+C:\Users\latev>mkdir test_Repository
+
+C:\Users\latev>copy con alpha.txt
+abcdefg
+^Z
+Скопировано файлов:         1.
+
+C:\Users\latev>copy con num.txt
+0123456789
+^Z
+Скопировано файлов:         1.
+
+C:\Users\latev>copy con C:\Users\latev\alpha.txt C:\Users\latev\test_Repository
+Ошибка в синтаксисе команды.
+
+C:\Users\latev>copy C:\Users\latev\alpha.txt C:\Users\latev\test_Repository
+Скопировано файлов:         1.
+
+C:\Users\latev>copy C:\Users\latev\num.txt C:\Users\latev\test_Repository
+Скопировано файлов:         1.
+
+C:\Users\latev>cd test_Repository
+
+C:\Users\latev\test_Repository>copy C:\Users\latev\.git C:\Users\latev\test_Repository
+C:\Users\latev\.git\config
+C:\Users\latev\.git\description
+C:\Users\latev\.git\HEAD
+Скопировано файлов:         3.
+
+C:\Users\latev\test_Repository>

@@ -1,0 +1,17 @@
+/*Морозов Иван П-431*/
+-- select * from category;
+-- select * from category where id_category=3;
+-- select * from category where discount!=0;
+-- select * from category where discount>0.05;
+-- select * from category where discount>0.05 and discount<0.15;
+-- select * from category where discount>0.05 or discount>=0.10;
+-- select * from category where psevdonim!="";
+-- select name_category from category;
+-- select name_category, discount from category;
+-- select discount from category;
+-- select distinct discount from category;
+-- select * from category order by discount;
+-- select * from category order by discount desc;
+-- select * from category where discount!=0 order by discount desc;
+-- select * from category limit 2;
+-- select * from category where discount!=0 limit 2;

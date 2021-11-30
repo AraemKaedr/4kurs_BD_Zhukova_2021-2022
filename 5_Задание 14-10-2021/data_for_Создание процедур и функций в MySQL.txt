@@ -1,0 +1,214 @@
+﻿use morozov;
+/*
+create table student_morozov
+(
+    N_stud int primary key auto_increment,
+    FIO varchar(40) not null,
+    D_R date not null,
+    Gruppa varchar(8) not null,
+    Stipendiya float,
+    Kod_spec int not null
+)
+character set = 'utf8';
+*/
+/*
+insert into student_morozov (N_stud, FIO, D_R, Gruppa, Stipendiya, Kod_spec) values
+(1, "Сидоров", "1992-07-23", "4п1", 880.00, 3322),
+(2, "Петров", "1993-11-07", "4п3", null, 4466),
+(3, "Григорьев", "1992-04-19", "4п2", 920.00, 8811),
+(4, "Данилова", "1992-06-11", "4п2", 1200, 8811),
+(5, "Андреев", "1993-11-06", "4п1", null, 3322),
+(6, "Серова", "1991-02-25", "4п1", null, 3322),
+(7, "Коробкова", "1992-11-20", "4п2", 880, 8811),
+(8, "Смирнов", "1991-07-16", "4п2", 920, 8811),
+(9, "Подгорнова", "1991-09-25", "4п3", 1200, 4466),
+(10, "Лебедев", "1991-07-26", "4п3", 920, 4466);
+*/
+
+-- Выводим таблицу
+-- select * from student_morozov;
+
+-- Процедура EX1:
+/*
+DELIMITER //
+CREATE PROCEDURE EX1(N nvarchar(8))
+BEGIN
+select * from student_morozov where Gruppa=N;
+END //
+DELIMITER;
+*/
+-- Проверка процедуры EX1
+-- call EX1('4п1');
+
+-- Процедура EX2:
+/*
+DELIMITER //
+CREATE PROCEDURE EX2(N nvarchar(40), M float)
+update student_morozov
+set Stipendiya=Stipendiya+M where FIO=N;
+DELIMITER //;
+*/
+-- Проверка процедуры EX2
+-- call ex2('ЛЕБЕДЕВ', 1500);
+
+-- Выводим таблицу
+-- select * from student_morozov;
+
+-- Процедура EX3:
+/*
+DELIMITER //
+CREATE PROCEDURE EX3(N int)
+select FIO, Kod_spec, Stipendiya from student_morozov where Kod_spec=N;
+DELIMITER //;
+*/
+-- Проверка процедуры EX3
+-- call ex3(3322);
+-- call ex3(4466);
+-- call ex3(8811);
+
+-- Процедура EX4:
+/*
+DELIMITER //
+CREATE PROCEDURE EX4(N nvarchar(8))
+select Gruppa, Sum(Stipendiya) as Sum_stip from student_morozov where Gruppa=N
+DELIMITER //;
+*/
+-- Проверка процедуры EX4
+-- call ex4('4п1');
+-- call ex4('4п2');
+-- call ex4('4п3');
+-- call ex4('2ЗАО1');
+
+-- Процедура EX5:
+/*
+DELIMITER //
+CREATE PROCEDURE EX5(N int)
+select *, year(D_R) as Year from student_morozov where year(D_R)=N
+END //
+*/
+-- Проверка процедуры EX4
+-- call ex5(2002);
+-- call ex5(1991);
+-- call ex5(1992);
+-- call ex5(1993);
+
+-- Процедура EX6:
+/*
+DELIMITER //
+CREATE PROCEDURE EX6(N nvarchar(8))
+select * from student_morozov where Gruppa=N and Stipendiya is null
+DELIMITER //
+*/
+-- Проверка процедуры EX6
+-- call ex6('4п1');
+-- call ex6('4п2');
+-- call ex6('4п3');
+-- call ex6('2ЗАО1');
+
+-- Процедура EX7:
+/*
+DELIMITER //
+CREATE PROCEDURE EX7(N date, M date)
+begin
+select * from student_morozov where D_R between N and M;
+end //
+*/
+-- Проверка процедуры EX7
+-- call ex7('1990-12-12', '1992-03-24');
+-- call ex7('1993-07-07', '2002-09-13');
+
+-- Процедура EX8:
+/*
+DELIMITER //
+CREATE PROCEDURE EX8(N nvarchar(8))
+begin
+select N_stud, FIO, D_R, Gruppa, Stipendiya*2 as Stipendiya, Kod_spec, Stip_New, Premiya from student_morozov where Gruppa=N;
+select * from student_morozov where Gruppa!=N;
+end //
+*/
+-- Проверка процедуры EX8
+-- call ex8('4п1');
+
+-- 18.	Просмотрите все имеющиеся в Вашей базе данных процедуры
+-- show procedure status where db = 'morozov';
+
+-- Процедура EX9:
+/*
+DELIMITER //
+CREATE PROCEDURE EX9(N date)
+begin
+select concat(day(N), ".", month(N), ".", year(N)) as DMY from student_morozov limit 1;
+end //
+*/
+-- Проверка процедуры EX9
+-- call ex9('2012-08-19');
+-- call ex9('2012-12-27');
+
+-- Функция EX9:
+/*
+DELIMITER //
+CREATE FUNCTiON EX9 (N Date) RETURNS VarChar(10)
+BEGIN
+DECLARE Y INT ;
+DECLARE M INT ;
+DECLARE D INT ;
+DECLARE S VarChar(10);
+SET y = EXTRACT( YEAR FROM N );
+SET M = EXTRACT( MONTH FROM N );
+SET D = EXTRACT( DAY FROM N );
+SET S = CONCAT( D, '.', M, '.', Y );
+RETURN S ;
+END //
+DELIMITER ;
+*/
+-- Проверка функции EX9
+-- SELECT ex9('2012-08-19') as DMY;
+-- SELECT ex9('2012-12-27') as DMY;
+
+-- Функция EX10:
+/*
+DELIMITER //
+CREATE FUNCTiON EX10 (X nvarchar(40)) RETURNS int(11)
+BEGIN
+DECLARE Con varchar(20) ;
+set Con = concat(X, '%');
+set @CountSpud = (select count(FIO) from student_morozov where FIO like Con);
+return @CountSpud;
+END //
+DELIMITER ;
+*/
+-- Проверка функции EX10
+-- SELECT ex10('П') as Count_Stud;
+-- SELECT ex10('А') as Count_Stud;
+
+-- Функция EX11:
+/*
+DELIMITER //
+CREATE FUNCTiON EX11 (Y nvarchar(8)) RETURNS float
+BEGIN
+set @SumStip = (select Sum(Stipendiya) from student_morozov where Gruppa=Y);
+return @SumStip;
+END //
+DELIMITER ;
+*/
+-- Проверка функции EX11
+-- SELECT ex11('4п1') as SumStipForGruppa;
+-- SELECT ex11('4п2') as SumStipForGruppa;
+-- SELECT ex11('4п3') as SumStipForGruppa;
+-- SELECT ex11('2ЗАО1') as SumStipForGruppa;
+
+-- Функция EX12:
+/*
+DELIMITER //
+CREATE FUNCTiON EX12 (G nvarchar(40)) RETURNS int(11)
+BEGIN
+set @CountSpud = (select count(FIO) from student_morozov where Gruppa = G);
+return @CountSpud;
+END //
+DELIMITER ;
+*/
+-- Проверка функции EX12
+-- SELECT ex12('4п1') as CountSpudForGruppa;
+-- SELECT ex12('4п2') as CountSpudForGruppa;
+-- SELECT ex12('4п3') as CountSpudForGruppa;
+-- SELECT ex12('2ЗАО1') as CountSpudForGruppa;
