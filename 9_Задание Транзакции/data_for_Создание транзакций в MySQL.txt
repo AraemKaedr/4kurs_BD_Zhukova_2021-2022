@@ -1,1 +1,111 @@
 use morozov;
+
+-- Выводим таблицу
+-- select * from student_morozov;
+
+-- Транзакцию Tr1_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr1_morozov(N int)
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Premiya = Premiya + Premiya*(N/100);
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr1_morozov
+-- call Tr1_morozov(10);
+
+-- Транзакцию Tr2_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr2_morozov(X nvarchar(8), N int)
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Premiya = Premiya + N where Gruppa=X;
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr2_morozov
+-- call Tr2_morozov('4п1', 5);
+-- call Tr2_morozov('4п2', 10);
+-- call Tr2_morozov('4п3', 15);
+-- call Tr2_morozov('2ЗАО1', 20);
+
+-- Транзакцию Tr3_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr3_morozov(X nvarchar(8), Y nvarchar(8))
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Gruppa = Y where Gruppa=X;
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr3_morozov
+-- call Tr3_morozov('4п1', '4гим1');
+-- call Tr3_morozov('4гим1', '4п1');
+
+-- Транзакцию T4_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr4_morozov(S int, Q int, Z int)
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Premiya = Premiya - Z where Kod_spec = S and Premiya - Z >= 0;
+update student_morozov set Premiya = Premiya + Z where Kod_spec = Q;
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr4_morozov
+-- call Tr4_morozov(3322, 8811, 350);
+-- call Tr4_morozov(3322, 8811, 270);
+
+-- Транзакцию T5_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr5_morozov(M int)
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Premiya = Premiya + 1000 where month(D_R) = M;
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr5_morozov
+-- call Tr5_morozov(7);
+-- call Tr5_morozov(3);
+
+-- Транзакцию T6_morozov_morozov:
+/*
+DELIMITER //
+CREATE PROCEDURE Tr6_morozov(Y int, N int)
+BEGIN
+select * from student_morozov;
+Set autocommit = 0;
+Start transaction;
+update student_morozov set Premiya = Stipendiya*(N/100) where year(D_R) = Y;
+commit;
+select * from student_morozov;
+END //
+*/
+-- Проверка транзакции Tr6_morozov
+-- call Tr6_morozov(1992, 30);
+-- call Tr6_morozov(2002, 40);
+
+-- 1.	Просмотрите все имеющиеся в Вашей базе данных процедуры
+-- show procedure status where db = 'morozov';
